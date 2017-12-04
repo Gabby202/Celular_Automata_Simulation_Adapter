@@ -36,20 +36,16 @@ public class Driver extends JPanel {
 		g2.drawImage(canvas, null, null);
 	}
 
-	public void drawRect(Color c, int x1, int y1, int width, int height) {
+	public void drawRect(Color c, int x, int y, int width, int height) {
 		int color = c.getRGB();
 		// Implement rectangle drawing
-		for (int x = x1; x < x1 + width; x++) {
-			for (int y = y1; y < y1 + height; y++) {
-				canvas.setRGB(x, y, color);
-			}
-		}
+			canvas.setRGB(x, y, color);		
 		repaint();
 	}
 	
-	public void update() {
+	/*public void update() {
 		button.doClick();
-	}
+	}*/
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
@@ -58,7 +54,7 @@ public class Driver extends JPanel {
 		JFrame frame = new JFrame("Direct draw demo");
 
 		Driver panel = new Driver(width, height);
-		button = new JButton("Button");
+	/*	button = new JButton("Button");
 
 		button.addActionListener(new ActionListener() {
 
@@ -69,14 +65,15 @@ public class Driver extends JPanel {
 				}
 			}
 
-		});
+		});*/
 		frame.add(panel);
 		frame.pack();
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		button.doClick();
+		//button.doClick();
+		panel.drawPixel();
 		} //main
 
 
@@ -101,17 +98,17 @@ public class Driver extends JPanel {
 			      for (int c = 0; c< 1000 ; c++) {
 			        current = (char) fis.read();
 			        if(Character.getNumericValue(current) == 1) {
-						drawRect(Color.WHITE, c, r, 1, 1); //empty
+						drawRect(Color.WHITE, c, r, 1, 1); //empty 
 			        } else if (Character.getNumericValue(current) == 2) {
-			        	drawRect(Color.GREEN, c, r, 1, 1); //healthy
+			        	drawRect(new Color(0, 102, 0), c, r, 1, 1); //healthy green
 					} else if (Character.getNumericValue(current) == 3) {
 						drawRect(Color.RED, c, r, 1, 1); //infected
 					} else if (Character.getNumericValue(current) == 4) {
 						drawRect(Color.BLACK, c, r, 1, 1); //dead infections
 					} else if (Character.getNumericValue(current) == 5) {
 						drawRect(Color.BLACK, c, r, 1, 1); //natural dead
-					} else if (Character.getNumericValue(current) == 2) {
-						drawRect(Color.BLUE, c, r, 1, 1); //protected
+					} else if (Character.getNumericValue(current) == 6) {
+						drawRect(new Color(255, 51, 204), c, r, 1, 1); //protected pink
 					}
 			       //fis.available() > 0 use this instead of c < 1000
 			      //  System.out.print(current);
