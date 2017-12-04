@@ -82,8 +82,8 @@ public class Driver extends JPanel {
 
 		public void drawPixel() {
 		// =================== ReadFile ===============================
-		for(int o = 0; o < 5; o++){
-		    File file = new File("out" + o + ".txt");
+		for(int o = 0; o < 100; o++){
+		    File file = new File("steps/world" + o + ".txt");
 		    if (!file.exists()) {
 		      System.out.println("file" + " does not exist.");
 		      return;
@@ -100,12 +100,18 @@ public class Driver extends JPanel {
 		      for(int r = 0; r < 1000; r++){
 			      for (int c = 0; c< 1000 ; c++) {
 			        current = (char) fis.read();
-			        if(Character.getNumericValue(current) == 0) {
-						drawRect(Color.GREEN, c, r, 1, 1);
-			        } else if (Character.getNumericValue(current) == 1) {
-			        	drawRect(Color.RED, c, r, 1, 1);
+			        if(Character.getNumericValue(current) == 1) {
+						drawRect(Color.WHITE, c, r, 1, 1); //empty
+			        } else if (Character.getNumericValue(current) == 2) {
+			        	drawRect(Color.GREEN, c, r, 1, 1); //healthy
+					} else if (Character.getNumericValue(current) == 3) {
+						drawRect(Color.RED, c, r, 1, 1); //infected
+					} else if (Character.getNumericValue(current) == 4) {
+						drawRect(Color.BLACK, c, r, 1, 1); //dead infections
+					} else if (Character.getNumericValue(current) == 5) {
+						drawRect(Color.BLACK, c, r, 1, 1); //natural dead
 					} else if (Character.getNumericValue(current) == 2) {
-						drawRect(Color.BLUE, c, r, 1, 1);
+						drawRect(Color.BLUE, c, r, 1, 1); //protected
 					}
 			       //fis.available() > 0 use this instead of c < 1000
 			      //  System.out.print(current);
@@ -119,7 +125,7 @@ public class Driver extends JPanel {
 		    long tEnd = System.currentTimeMillis();
 			long tDelta = tEnd - tStart;
 			//double elapsedSeconds = tDelta / 1000.0;
-			System.out.println(tDelta + "ms");
+			System.out.println("Step: " + o + " " + tDelta + "ms");
 		}
 		
 	    //================================================================
