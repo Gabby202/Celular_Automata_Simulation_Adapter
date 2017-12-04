@@ -17,7 +17,7 @@ public class WriteFile {
 	}
 	
 	public static void write() throws IOException {
-		PrintWriter pw = new PrintWriter(new FileWriter("out.txt"));
+		PrintWriter pw = new PrintWriter(new FileWriter("out0.txt"));
 		Random rand = new Random();
 		for (int i = 0; i < 1000000; i++) {
 			pw.write(new Integer(rand.nextInt(3)).toString());

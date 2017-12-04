@@ -26,20 +26,20 @@ public class Driver extends JPanel {
 		canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 
-	public void drawPixel() {
+	/*public void drawPixel(int current) {
 		long tStart = System.currentTimeMillis();
 		for (int k = 0; k < 1000; k++) {
 			for (int i = 0; i < 1000; i++) {
-				int r = rand.nextInt(3);
-				if (r == 0) {
+				//int r = rand.nextInt(3);
+				if (current == 0) {
 					drawRect(Color.RED, i, k, 1, 1);
-				} else if (r == 1) {
+				} else if (current == 1) {
 					drawRect(Color.GREEN, i, k, 1, 1);
-				} else if (r == 2) {
+				} else if (current == 2) {
 					drawRect(Color.BLUE, i, k, 1, 1);
 				}
 			}
-		}
+		}*/
 			
 		/*	for (int l = 999; l > 500; l--) {
 				for (int m = 0; m < 1000; m++) {
@@ -56,12 +56,12 @@ public class Driver extends JPanel {
 			}*/
 				
 		
-		long tEnd = System.currentTimeMillis();
+	/*	long tEnd = System.currentTimeMillis();
 		long tDelta = tEnd - tStart;
 		//double elapsedSeconds = tDelta / 1000.0;
 		System.out.println(tDelta + "ms");
-		update();
-	}
+		//update();
+	}*/
 
 	public Dimension getPreferredSize() {
 		return new Dimension(canvas.getWidth(), canvas.getHeight());
@@ -88,12 +88,19 @@ public class Driver extends JPanel {
 		button.doClick();
 	}
 
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
+		int width = 1000;
+		int height = 1000;
+		JFrame frame = new JFrame("Direct draw demo");
+
+		Driver panel = new Driver(width, height);
+		button = new JButton("Button");
 		
 		// =================== ReadFile ===============================
-	    /*File file = new File(args[0]);
+	    File file = new File("out1.txt");
 	    if (!file.exists()) {
-	      System.out.println(args[0] + " does not exist.");
+	      System.out.println("file" + " does not exist.");
 	      return;
 	    }
 	    if (!(file.isFile() && file.canRead())) {
@@ -102,29 +109,53 @@ public class Driver extends JPanel {
 	    }
 	    try {
 	      FileInputStream fis = new FileInputStream(file);
-	      char current;
-	      while (fis.available() > 0) {
-	        current = (char) fis.read();
-	        System.out.print(current);
+	      char current; //current char in file
+	      for(int r = 0; r < 1000; r++){
+		      for (int c = 0; c< 1000 ; c++) {
+		        current = (char) fis.read();
+		        if(Character.getNumericValue(current) == 0) {
+					panel.drawRect(Color.GREEN, c, r, 1, 1);
+		        } else if (Character.getNumericValue(current) == 1) {
+		        	panel.drawRect(Color.RED, c, r, 1, 1);
+				} else if (Character.getNumericValue(current) == 2) {
+					panel.drawRect(Color.BLUE, c, r, 1, 1);
+				}
+		       //fis.available() > 0 use this instead of c < 1000
+		      //  System.out.print(current);
+		      }
 	      }
 	    } catch (IOException e) {
 	      e.printStackTrace();
-	    }*/
+	    }
 	  
 	    //================================================================
-		int width = 1000;
-		int height = 1000;
-		JFrame frame = new JFrame("Direct draw demo");
-
-		Driver panel = new Driver(width, height);
-		button = new JButton("Button");
+		/*long tStart = System.currentTimeMillis();
+		for (int k = 0; k < 1000; k++) {
+			for (int i = 0; i < 1000; i++) {
+				//int r = rand.nextInt(3);
+				if (0 == 0) {
+					panel.drawRect(Color.RED, i, k, 1, 1);
+				} else if (1 == 1) {
+					panel.drawRect(Color.GREEN, i, k, 1, 1);
+				} else if (1 == 2) {
+					panel.drawRect(Color.BLUE, i, k, 1, 1);
+				}
+			}
+		}
+	    
+			long tEnd = System.currentTimeMillis();
+			long tDelta = tEnd - tStart;
+			//double elapsedSeconds = tDelta / 1000.0;
+			System.out.println(tDelta + "ms");*/
+			//update();
+	    //==============================================================
 
 		button.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == button) {
-					panel.drawPixel();
+					//panel.drawPixel();
 				}
 			}
 
