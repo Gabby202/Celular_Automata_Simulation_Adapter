@@ -2,14 +2,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import javax.swing.JButton;
@@ -22,7 +20,7 @@ public class Driver extends JPanel {
 	Random rand = new Random();
 	private BufferedImage canvas;
 	public static JButton button;
-	public int counter = 0;
+	public long counter = 0;
 
 	public Driver(int width, int height) {
 		canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -115,8 +113,13 @@ public class Driver extends JPanel {
 		    long tEnd = System.currentTimeMillis();
 			long tDelta = tEnd - tStart;
 			//double elapsedSeconds = tDelta / 1000.0;
-			System.out.println("Step: " + o + " " + tDelta + "ms");
-			//System.out.println("Population: " + counter);
+			//System.out.println("Step: " + o + " " + tDelta + "ms");
+			if((o + 1) % 10 == 0) {
+				DecimalFormat numberFormat = new DecimalFormat("###");
+
+				System.out.println("Step " + (o+1) + " Population: " + counter);
+			}
+			counter = 0;
 			//repaint();
 
 		}
