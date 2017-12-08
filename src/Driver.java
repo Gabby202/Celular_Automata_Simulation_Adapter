@@ -3,9 +3,9 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Random;
@@ -13,7 +13,6 @@ import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
 
 public class Driver extends JPanel {
 
@@ -29,7 +28,7 @@ public class Driver extends JPanel {
 	public Dimension getPreferredSize() {
 		return new Dimension(canvas.getWidth(), canvas.getHeight());
 	}
- 
+
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
@@ -46,10 +45,10 @@ public class Driver extends JPanel {
 		}
 		repaint();
 	}
-	
-	/*public void update() {
-		button.doClick();
-	}*/
+
+	/*
+	 * public void update() { button.doClick(); }
+	 */
 
 	@SuppressWarnings("unused")
 	public static void main(String[] args) {
@@ -64,73 +63,70 @@ public class Driver extends JPanel {
 		frame.setVisible(true);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		panel.draw();
-		} //main
+	} // main
 
-
-		public void draw() {
+	public void draw() {
 		// =================== ReadFile ===============================
-		for(int o = 0; o < 100; o++){
-		    File file = new File("C:\\Users\\Gabby\\AppData\\Local\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\gabby\\pc\\parallel-finished\\parallel-computing-project\\worlds/world" + o + ".txt");
-		   
-			long tStart = System.currentTimeMillis();
-		    try {
-		    	
-		      BufferedReader bf = new BufferedReader(new FileReader(file));
-		      char current; //current char in file
-		      for(int r = 0; r < 1000; r++){
-			      for (int c = 0; c< 1000 ; c++) {
-			        current = (char) bf.read();
-			        if(Character.getNumericValue(current) == 1) {
-						drawRect(Color.WHITE, c, r, 1, 1); //empty 
-			        } else if (Character.getNumericValue(current) == 2) {
-			        	drawRect(new Color(50, 81, 56), c, r, 1, 1); //healthy green
-			        	counter++;
-					} else if (Character.getNumericValue(current) == 3) {
-						drawRect(Color.RED, c, r, 1, 1); //infected
-					} else if (Character.getNumericValue(current) == 4) {
-						drawRect(Color.BLACK, c, r, 1, 1); //dead infections
-						counter--;
-					} else if (Character.getNumericValue(current) == 5) {
-						drawRect(Color.BLACK, c, r, 1, 1); //natural dead
-						counter--;
-					} else if (Character.getNumericValue(current) == 6) {
-						drawRect(new Color(255, 51, 204), c, r, 1, 1); //protected pink
-					}
-			       //fis.available() > 0 use this instead of c < 1000
-			      //  System.out.print(current);
-			        
-			      } //loop inner
-			      
-		      } //loop outer
-		      
-		      
+		for (int o = 0; o < 100; o++) {
+			File file = new File(
+					"C:\\Users\\Gabby\\AppData\\Local\\Packages\\CanonicalGroupLimited.UbuntuonWindows_79rhkp1fndgsc\\LocalState\\rootfs\\home\\gabby\\pc\\parallel-finished\\parallel\\parallel-computing-project\\worlds/world"
+							+ o + ".bin");
 
-		    } catch (IOException e) {
-		      e.printStackTrace();
-		    }
-		    long tEnd = System.currentTimeMillis();
+			long tStart = System.currentTimeMillis();
+			try {
+				DataInputStream ds = new DataInputStream(new FileInputStream(file));
+				int current; // current int in file
+				for (int r = 0; r < 1000; r++) {
+					for (int c = 0; c < 1000; c++) {
+						current = ds.read();
+						if (current == 1) {
+							drawRect(Color.BLACK, c, r, 1, 1); // empty
+						} else if (current == 2) {
+							drawRect(new Color(50, 81, 56), c, r, 1, 1); // healthy
+																			// green
+							counter++;
+						} else if (current == 3) {
+							drawRect(Color.RED, c, r, 1, 1); // infected
+						} else if (current == 4) {
+							drawRect(Color.WHITE, c, r, 1, 1); // dead
+																// infections
+							counter--;
+						} else if (current == 5) {
+							drawRect(Color.WHITE, c, r, 1, 1); // natural dead
+							counter--;
+						} else if (current	 == 6) {
+							drawRect(new Color(255, 51, 204), c, r, 1, 1); // protected
+																			// pink
+						}
+						// fis.available() > 0 use this instead of c < 1000
+						// System.out.print(current);
+
+					} // loop inner
+
+				} // loop outer
+
+				ds.close();
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			long tEnd = System.currentTimeMillis();
 			long tDelta = tEnd - tStart;
-			//double elapsedSeconds = tDelta / 1000.0;
-			//System.out.println("Step: " + o + " " + tDelta + "ms");
-			if((o + 1) % 10 == 0) {
+			// double elapsedSeconds = tDelta / 1000.0;
+			// System.out.println("Step: " + o + " " + tDelta + "ms");
+			if ((o + 1) % 10 == 0) {
 				DecimalFormat numberFormat = new DecimalFormat("###");
 
-				System.out.println("Step " + (o+1) + " Population: " + counter);
+				System.out.println("Step " + (o + 1) + " Population: " + counter);
 			}
 			counter = 0;
-			//repaint();
+			// repaint();
 
 		}
-		
-	    //================================================================
-		}
-	
 
-
-				
-
-
+		// ================================================================
+	}
 
 }
