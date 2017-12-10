@@ -1,4 +1,3 @@
-import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,7 +7,7 @@ public class FileHandler {
 
     private int cellSize = 3;
     private byte[] worldMap;
-    private String FILENAME = "worlds/world.bin";
+    private String FILENAME = "./world.bin";
     private FileInputStream inputStream;
 
 
