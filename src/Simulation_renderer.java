@@ -10,17 +10,17 @@ public class Simulation_renderer {
 		int NB_STEPS = 1000;
 		byte[] world= null;
 		boolean test = true;
-		FileHandler myFile = new FileHandler(NB_CELLS);
+		FileHandler myFile ;
 		DisplayMap myWindow = new DisplayMap(NB_CELLS);
 
 
 		Process p = null;
 		try {
-			p = Runtime.getRuntime().exec("parallel_program.exe ...");
+			p = Runtime.getRuntime().exec("serial_program.exe");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		myWindow.showText("Launching parallel_program.exe");
+		myWindow.showText("Launching serial_program.exe ...");
 
 		BufferedReader cStdoutStream = new BufferedReader(new InputStreamReader(p.getInputStream()));
 		BufferedReader cStderrStream = new BufferedReader(new InputStreamReader(p.getErrorStream()));
@@ -29,29 +29,29 @@ public class Simulation_renderer {
 		String stderr;
 		try {
 			while ((stdout = cStdoutStream.readLine())!=null ){
-				System.out.println(stdout);
 				myWindow.showText(stdout);
 			}
 			while ((stderr = cStderrStream.readLine())!=null ){
-				System.out.println(stderr);
 				myWindow.showText(stderr,Color.RED);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		myFile = new FileHandler(NB_CELLS);
 
 
-
-		for (int i =0;i<NB_STEPS && test ;i++){
+		for (int i =1;i<=NB_STEPS && test ;i++){
 			world = myFile.getStep();
 			test = world!=null;
 			try {
-				Thread.sleep(100);
+				Thread.sleep(50);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			test = test && myWindow.newStep(world);
+			myWindow.printStep(i, NB_STEPS);
 		}
+
 
 	} // main
 

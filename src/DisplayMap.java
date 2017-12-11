@@ -9,11 +9,18 @@ import java.awt.image.BufferedImage;
 
 public class DisplayMap {
 
+    private int healthyRate=0;
+    private int deadRate=0;
+    private int protectedRate=0;
+    private int infectedRate=0;
+    private int emptyRate=0;
     private JFrame myFrame;
     private BufferedImage worldImg;
     private JPanel imgPanel;
     private JPanel textPanel;
     private JTextPane progOutput;
+    private JTextPane simulationStats;
+    private JTextPane currentStatus;
     private int worldSize;
     private int asideSize = 400;
 
@@ -31,30 +38,39 @@ public class DisplayMap {
     }
 
     protected boolean newStep(byte[] map){
+        healthyRate=0;
+        deadRate=0;
+        protectedRate=0;
+        infectedRate=0;
+        emptyRate=0;
         for (int i = 0;i<worldSize;i++){
             for (int j=0;j<worldSize;j++){
                 worldImg.setRGB(i,j,getRgbFromCell(i,j,map));
             }
         }
+        updateStats();
         myFrame.repaint();
         return true;
     }
 
+    private void updateStats() {
+        simulationStats.setText("");
+        appendToPane("Healthy : "+(healthyRate*100)/(worldSize*worldSize)+"%",new Color(67, 143, 77),simulationStats);
+        appendToPane("Dead : "+(deadRate*100)/(worldSize*worldSize)+"% (White)",Color.BLACK,simulationStats);
+        appendToPane("Protected : "+(protectedRate*100)/(worldSize*worldSize)+"%",new Color(30, 87, 188),simulationStats);
+        appendToPane("Infected : "+(infectedRate*100)/(worldSize*worldSize)+"%",Color.RED,simulationStats);
+        appendToPane("Empty : "+(emptyRate*100)/(worldSize*worldSize)+"%",Color.BLACK,simulationStats);
+    }
+
     protected void showText( String msg){
-        msg = msg+"\n";
-        StyleContext sc = StyleContext.getDefaultStyleContext();
-        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, Color.BLACK);
-
-        aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
-        aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
-
-        int len = progOutput.getDocument().getLength();
-        progOutput.setCaretPosition(len);
-        progOutput.setCharacterAttributes(aset, false);
-        progOutput.replaceSelection(msg);
+        appendToPane(msg,Color.BLACK,progOutput);
     }
 
     protected void showText( String msg, Color c){
+        appendToPane(msg, c, progOutput);
+    }
+
+    private void appendToPane(String msg, Color c, JTextPane tp) {
         msg=msg+"\n";
         StyleContext sc = StyleContext.getDefaultStyleContext();
         AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
@@ -62,10 +78,10 @@ public class DisplayMap {
         aset = sc.addAttribute(aset, StyleConstants.FontFamily, "Lucida Console");
         aset = sc.addAttribute(aset, StyleConstants.Alignment, StyleConstants.ALIGN_JUSTIFIED);
 
-        int len = progOutput.getDocument().getLength();
-        progOutput.setCaretPosition(len);
-        progOutput.setCharacterAttributes(aset, false);
-        progOutput.replaceSelection(msg);
+        int len = tp.getDocument().getLength();
+        tp.setCaretPosition(len);
+        tp.setCharacterAttributes(aset, false);
+        tp.replaceSelection(msg);
     }
 
     private void initImgPanel(){
@@ -86,8 +102,12 @@ public class DisplayMap {
         textPanel.setLayout(new GridLayout(0,1));
         myFrame.add(textPanel,BorderLayout.LINE_END);
 
+        simulationStats = new JTextPane();
+        currentStatus=new JTextPane();
         progOutput = new JTextPane();
         textPanel.add(progOutput);
+        textPanel.add(currentStatus);
+        textPanel.add(simulationStats);
     }
 
     private int getRgbFromCell(int i,int j, byte[] world){
@@ -95,19 +115,33 @@ public class DisplayMap {
         int rgbColor;
         if (cellStatus == 1) {
             rgbColor = Color.BLACK.getRGB(); // empty
+            emptyRate++;
         } else if (cellStatus == 2) {
-            rgbColor = (new Color(50, 81, 56)).getRGB(); // healthy green
+            rgbColor = (new Color(67, 143, 77)).getRGB(); // healthy green
+            healthyRate++;
         } else if (cellStatus == 3) {
             rgbColor = Color.RED.getRGB(); // infected
+            infectedRate++;
         } else if (cellStatus == 4) {
             rgbColor=Color.WHITE.getRGB(); // dead infections
+            deadRate++;
         } else if (cellStatus == 5) {
             rgbColor = Color.WHITE.getRGB(); // natural dead
+            deadRate++;
         } else if (cellStatus	 == 6) {
-            rgbColor = (new Color(255, 51, 204)).getRGB(); // protected pink
+            rgbColor = (new Color(30, 87, 188)).getRGB(); // protected pink
+            protectedRate++;
         }else{
             rgbColor = Color.BLUE.getRGB();
         }
         return rgbColor;
+    }
+
+    protected void printStep(int i,int total) {
+        if (i==total){
+            currentStatus.setText("Current status : \nRunning step "+i+"/"+total+"\n\n --END--");
+        }else{
+            currentStatus.setText("Current status : \nRunning step "+i+"/"+total);
+        }
     }
 }
